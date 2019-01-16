@@ -1,5 +1,11 @@
 function output = EdulogRun(port, dur, sps, loggers)
+
+
 addpath(genpath('Data'))
+
+if exist('C:\neulog_api', 'dir')
+    error('Neulog API not found, please <a href="https://neulog.com/software/">install</a>.')
+end
 
 %% Essential checks
 if ~isnumeric(port)
