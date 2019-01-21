@@ -1,12 +1,13 @@
-function [test, tFig] = EdulogTest(port, dur, sps, loggers)
-start = input('Press ''Enter'' to test eduloggers...\n', 's');
+function [test, tFig, start] = EdulogTest(port, dur, sps, loggers)
+input('Press ''Enter'' to test eduloggers...\n', 's');
+
 if isempty(start)
     testcycle = 'No';
     cont = false;
     while cont == false
         switch testcycle
             case 'No'
-                test = EdulogRun(port, dur, sps, loggers);
+                [test, start] = EdulogRun(port, dur, sps, loggers);
                 tFig = EdulogPlot(test, loggers);
                 testcycle = questdlg('Does this data look reasonable?','Test Eduloggers','Yes','No', 'Cancel','Yes');
                 close all

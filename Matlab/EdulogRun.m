@@ -1,6 +1,6 @@
-function output = EdulogRun(port, dur, sps, loggers)
+function [output, start] = EdulogRun(port, dur, sps, loggers)
 
-
+start = EdulogListener;
 addpath(genpath('Data'))
 
 if exist('C:\neulog_api', 'dir')
@@ -30,6 +30,7 @@ end
 
 %% Run edulogger
 preface = ['http://localhost:' num2str(port) '/NeuLogAPI?'];
+start.Started = true;
 
 for n = 1:dur*sps %for each sample
     tic

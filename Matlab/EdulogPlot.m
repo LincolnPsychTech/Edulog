@@ -7,6 +7,8 @@ function fig = EdulogPlot(data, loggers)
 % (double)
 % Concern: Whether or not each sample took more than twice the specified
 % sample rate to retrieve (logical)
+% Event (optional): Whether or not an event happened at this point
+% (logical)
 % An additional field for each kind of Edulogger used, containing the
 % measurements taken at each point in data.Time. Fieldnames should line up 
 % with the names specified in "loggers".
@@ -34,8 +36,13 @@ close all % Close any open figures
 fig = figure; % Create a blank figure
 g = gramm('x',[data.Time], 'y',y); % Create GRAMM object with .Time as its x-axis and y as it's y-axis
 g.set_names('x','Time (s)', 'y',''); % Set axis names (y is blank as logger names are included in figure titles)
-g.facet_grid(loggers', [], 'scale','free'); % Split into seperate graphs for each logger
 g.geom_line(); % Add data as lines
+if length(loggers) > 1 % if there are multiple loggers
+    g.facet_grid(loggers', [], 'scale','free'); % Split into seperate graphs for each logger
+end
+if isfield(data, 'Event') % if there is event data
+    g.geom_vline('xintercept', data([data.Event]).Time, 'style', 'k-') % Plot events as vertical lines
+end
 g.draw(); % Draw graphs
 fig.Position([2,4]) = [100, sDim(4) - 200]; % Resize to the height of the screen - 200
 fig.Position([1,3]) = [200, sDim(3) - 400];% Resize to the width of the screen - 400
