@@ -1,4 +1,4 @@
-function [test, tFig, start] = EdulogClapTest(port, dur, sps, loggers)
+function [test, tFig] = EdulogClapTest(port, dur, sps, loggers)
 
 %% Essential checks
 if dur < 15
@@ -6,14 +6,18 @@ if dur < 15
 end
 
 %% Run
-interval = 5 + rand()*(dur - 5); %calculate interval before beep to allow time for peaks to be visible
-[test] = EdulogRun(port, dur, sps, loggers, listener); %start gathering data
-waitfor(listener,'Started');
-pause(interval) %wait for the interval
-sound(sin(1:5000), 10*1000) %play a loud and annoying sound
+interval = 5 + rand()*(dur - 10); %calculate interval before beep to allow time for peaks to be visible
+listener = EdulogListener;
+parfor i = 1 %without pausing execition
+    start(timer( ... %start a timer
+        'StartDelay', interval, ... %wait for the interval
+        'TimerFcn', 'sound(sin(1:5000), 10*1000)' ... %play a loud and annoying sound
+        ));
+end
+test = EdulogRun(port, dur, sps, loggers, listener); %meanwhile start gathering data
 for n = 1:dur*sps
     test(n).Event = false;
 end
-i = round(interval*sps); %transform interval to integer
+i = round(interval*sps); %transform interval to index
 test(i).Event = true;
 tFig = EdulogPlot(test, loggers);

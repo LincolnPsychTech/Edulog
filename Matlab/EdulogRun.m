@@ -2,12 +2,12 @@ function [output] = EdulogRun(port, dur, sps, loggers, varargin)
 if ~isempty(varargin)
     listener = varargin{1};
 else
-    listener = struct('Started', false);
+    listener = struct('Started', []);
 end
 listener.Started = false;
 addpath(genpath('Data'))
 
-if exist('C:\neulog_api', 'dir')
+if ~exist('C:\neulog_api', 'dir')
     error('Neulog API not found, please <a href="https://neulog.com/software/">install</a>.')
 end
 
@@ -34,7 +34,7 @@ end
 
 %% Run edulogger
 preface = ['http://localhost:' num2str(port) '/NeuLogAPI?'];
-start.Started = true;
+listener.Started = true;
 
 for n = 1:dur*sps %for each sample
     tic

@@ -1,0 +1,32 @@
+function [test, tFig] = EdulogClapTest(port, dur, sps, loggers)
+
+%% Essential checks
+if dur < 15
+    error('Duration must be at least 15 seconds to allow for peaks to be visible.')
+end
+
+%% Run
+interval = 5 + rand()*(dur - 5); %calculate interval before beep to allow time for peaks to be visible
+listener = EdulogListener;
+
+parfor i = 1:2
+    if i == 1
+        test = EdulogRun(port, dur, sps, loggers, listener); %start gathering data
+    else
+        pause(interval);
+        sound(sin(1:5000), 10*1000);
+    end
+end
+%test = parfeval(gcp(), @EdulogRun, 1, port, dur, sps, loggers, listener);
+% pause(interval);
+% sound(sin(1:5000), 10*1000);
+% waitfor(test, 'State');
+%[test] = EdulogRun(port, dur, sps, loggers, listener); %start gathering data
+%waitfor(listener,'Started');
+test = test.OutputArguments{1};
+for n = 1:dur*sps
+    test(n).Event = false;
+end
+i = round(interval*sps); %transform interval to integer
+test(i).Event = true;
+tFig = EdulogPlot(test, loggers);
