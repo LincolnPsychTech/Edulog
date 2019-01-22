@@ -1,10 +1,9 @@
 function [output] = EdulogRun(port, dur, sps, loggers, varargin)
 if ~isempty(varargin)
-    listener = varargin{1};
+    listener = varargin{1}
 else
-    listener = struct('Started', false);
+    
 end
-listener.Started = false;
 addpath(genpath('Data'))
 
 if exist('C:\neulog_api', 'dir')

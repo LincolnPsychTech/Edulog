@@ -7,8 +7,8 @@ end
 
 %% Run
 interval = 5 + rand()*(dur - 5); %calculate interval before beep to allow time for peaks to be visible
-[test, start] = EdulogRun(port, dur, sps, loggers); %start gathering data
-waitfor(start,'Started');
+[test] = EdulogRun(port, dur, sps, loggers, listener); %start gathering data
+waitfor(listener,'Started');
 pause(interval) %wait for the interval
 sound(sin(1:5000), 10*1000) %play a loud and annoying sound
 for n = 1:dur*sps
