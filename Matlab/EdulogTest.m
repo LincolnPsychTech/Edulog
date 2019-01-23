@@ -1,12 +1,4 @@
-function [test, tFig] = EdulogTest(port, dur, sps, loggers, varargin)
-if ~isempty(varargin)
-    listener = varargin{1};
-else
-    listener = struct('Started', []);
-end
-listener.Started = false;
-
-
+function [test, tFig] = EdulogTest(port, dur, sps, loggers)
 input('Press ''Enter'' to test eduloggers...\n', 's');
 
 if isempty(start)
