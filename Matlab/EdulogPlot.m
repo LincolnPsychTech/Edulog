@@ -12,11 +12,13 @@ function fig = EdulogPlot(data, loggers)
 % An additional field for each kind of Edulogger used, containing the
 % measurements taken at each point in data.Time. Fieldnames should line up 
 % with the names specified in "loggers".
-% 
 % "loggers" is a one dimensional cell array, with each string specifying
 % the name of a different Edulogger as described in the Neulog API 
 % literature:
 % https://neulog.com/wp-content/uploads/2014/06/NeuLog-API-version-7.pdf
+%
+% "fig" is a Graphics Object containing the graph generated, properties of
+% the graph can be changed by editing this object.
 
 addpath(genpath('Plotting')) % Add the folder with necessary plotting functions to the path
 
