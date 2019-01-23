@@ -1,5 +1,7 @@
 function [test, tFig] = EdulogTest(port, dur, sps, loggers)
 % Perform a test to ensure that eduloggers are working, then plot the data.
+% This program will repeat until the user confirms data is acceptible, or
+% cancels.
 %
 % "port" is the port Eduloggers are connected to, this is visible on the
 % Neulog API window.
@@ -26,23 +28,23 @@ function [test, tFig] = EdulogTest(port, dur, sps, loggers)
 % "tFig" is a Graphics Object containing the graph generated, properties of
 % the graph can be changed by editing this object.
 
-input('Press ''Enter'' to test eduloggers...\n', 's');
-cont = false;
+input('Press ''Enter'' to test eduloggers...\n', 's'); % Wait for user response to begin test
+cont = false; % Set cont initially equal to false
 
-while cont == false
-    switch testcycle
-        case 'No'
-            test = EdulogRun(port, dur, sps, loggers);
-            tFig = EdulogPlot(test, loggers);
-            testcycle = questdlg('Does this data look reasonable?','Test Eduloggers','Yes','No', 'Cancel','Yes');
-            close all
-        case 'Yes'
-            cont = true;
-            close all
-        case 'Cancel'
-            cont = true;
-            close all
-            error('Edulogger test cancelled')
+while cont == false % While cont is false...
+    switch testcycle % What is the value of testcycle?
+        case 'No' % If it's No...
+            test = EdulogRun(port, dur, sps, loggers); % Run the eduloggers
+            tFig = EdulogPlot(test, loggers); % Plot results
+            testcycle = questdlg('Does this data look reasonable?','Test Eduloggers','Yes','No', 'Cancel','Yes'); % Ask user whether to move on
+            close all % Close plot
+        case 'Yes' % If it's Yes...
+            cont = true; % Set cont to true so the script moves on
+            close all % Close plot
+        case 'Cancel' % If it's Cancel...
+            cont = true; % Set cont to true so the script moves on
+            close all % Close plot
+            error('Edulogger test cancelled') % Return an error
     end
 end
 
