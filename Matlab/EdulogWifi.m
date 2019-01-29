@@ -1,9 +1,8 @@
-function [output] = EdulogWifi(port, dur, sps, loggers)
+function [output] = EdulogWifi(IP, dur, sps, loggers)
 % Run specified Eduloggers for a specified duration at a specified temporal
 % resolution.
 %
-% "port" is the port Eduloggers are connected to, this is visible on the
-% Neulog API window.
+% "IP" is the IP address of the WiFi module Eduloggers are connected to, this is visible from the control panel of your internet router.
 % "dur" is the duration (s) of the clap test, it must be at least 15s for
 % any response to be visible.
 % "sps" is the number of samples the edulogger should take per second, up
@@ -53,7 +52,7 @@ end
 
 
 %% Run edulogger
-preface = ['http://localhost:' num2str(port) '/NeuLogAPI?']; % Construct the string to preface any argument passed to the Eduloggers
+preface = ['http://' IP '/NeuLogAPI?']; % Construct the string to preface any argument passed to the Eduloggers
 
 for n = 1:dur*sps % For each sample...
     tic % Start a timer
@@ -83,4 +82,31 @@ for n = 1:dur*sps % For each sample...
     output(n).Time = data.Time(n); % Save timestamps to the output
     output(n).Concern = data.Concern(n); % Save concern matrix to the output
 end
+end
+
+
+
+function i = findnum(str)
+% Find values in a string which can be converted to numeric without
+% returning an error.
+%
+% "str" is the string in which to find numbers
+%
+% "i" is a logical matrix with the indices of numbers in the string as
+% true.
+
+i = find(... % Find indices at which str is equal to...
+    str == '0' | ... % ...0
+    str == '1' | ... % ...1
+    str == '2' | ... % ...2
+    str == '3' | ... % ...3
+    str == '4' | ... % ...4
+    str == '5' | ... % ...5
+    str == '6' | ... % ...6
+    str == '7' | ... % ...7
+    str == '8' | ... % ...8
+    str == '9' | ... % ...9
+    str == '.' | ... % ...a decimal point
+    str == '-'   ... % ...a minus sign
+    );
 end

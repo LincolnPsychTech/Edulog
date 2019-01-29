@@ -19,8 +19,6 @@ function [output] = EdulogRun(port, dur, sps, loggers)
 % (double)
 % Concern: Whether or not each sample took more than twice the specified
 % sample rate to retrieve (logical)
-% Event (optional): Whether or not an event happened at this point
-% (logical)
 % An additional field for each kind of Edulogger used, containing the
 % measurements taken at each point in data.Time. Fieldnames should line up 
 % with the names specified in "loggers".
@@ -110,5 +108,4 @@ i = find(... % Find indices at which str is equal to...
     str == '.' | ... % ...a decimal point
     str == '-'   ... % ...a minus sign
     );
-end
 end
