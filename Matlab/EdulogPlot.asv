@@ -57,7 +57,7 @@ for L = 1:length(loggers)
     % Plot data
     ln{L} = line(x, y, 'Color', [42, 107, 211]./255, 'LineWidth', 2); % Plot data
     ev{L} = line([[data(e).Time]; [data(e).Time]]', ax{L}.YLim, 'Color', 'k', 'LineWidth', 2); % Plot events
-    co{L} = line([[data(c).Time]; [data(c).Time]]', ax{L}.YLim, 'Color', 'r', 'LineStyle', ':'); % Plot concern points
+    co{L} = line([[data(c).Time]; [data(c).Time]]', ax{L}.YLim, 'Color', 'r', 'LineStyle', ':'); % Plot 
     
     % Draw legend
     le{L} = legend({"Data", "Events", "Concern"});

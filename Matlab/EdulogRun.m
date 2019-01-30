@@ -23,8 +23,6 @@ function [output] = EdulogRun(port, dur, sps, loggers)
 % measurements taken at each point in data.Time. Fieldnames should line up 
 % with the names specified in "loggers".
 
-addpath(genpath('Data')) % Add the "Data" folder to the path
-
 %% Essential checks
 if ~exist('C:\neulog_api', 'dir') % If the Neulog API is not installed...
     error('Neulog API not found, please <a href="https://neulog.com/software/">install</a>.') % Link user to the installation page
@@ -64,6 +62,7 @@ for n = 1:dur*sps % For each sample...
         end
         data.Time(n) = toc; % Record the time taken
         data.Concern(n) = round(toc, 1) > 2/sps; % Did this sample take more than twice the desired time to retrieve?
+        data.Event(n) = false;
     end
 end
 
