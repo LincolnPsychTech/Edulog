@@ -23,11 +23,12 @@ function fig = EdulogPlot(data, loggers)
 sDim = get(0,'screensize'); % Get screensize
 
 close all % Close any open figures
+
 % Create & setup a blank figure
-fig = figure;
-fig.Name = 'Edulog Data';
-fig.NumberTitle = 'off';
-fig.Color = [1, 1, 1];
+fig = figure; % Create figure
+fig.Name = 'Edulog Data'; % Name figure
+fig.NumberTitle = 'off'; % Remove "Figure 1" label
+fig.Color = 'white'; % White background
 fig.Position([2,4]) = [100, sDim(4) - 200]; % Resize to the height of the screen - 200
 fig.Position([1,3]) = [200, sDim(3) - 400];% Resize to the width of the screen - 400
 
@@ -60,9 +61,7 @@ for L = 1:length(loggers)
     co{L} = line([[data(c).Time]; [data(c).Time]]', ax{L}.YLim, 'Color', 'r', 'LineStyle', ':'); % Plot concern points
     
     % Draw legend
-    le{L} = legend({"Data", "Events", "Concern"});
-    le{L}.Position([1,3]) = [0.9, 0.1];
-    le{L}.Box = 'off';
+    le{L} = legend({"Data", "Events", "Concern"}); % Add legend
+    le{L}.Position([1,3]) = [0.9, 0.1]; % Position legend
+    le{L}.Box = 'off'; % Remove outline
 end
-
-
