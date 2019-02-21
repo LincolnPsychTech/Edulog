@@ -62,7 +62,7 @@ for n = 1:dur*sps % For each sample...
         end
         data.Time(n) = toc; % Record the time taken
         data.Concern(n) = round(toc, 1) > 2/sps; % Did this sample take more than twice the desired time to retrieve?
-        data.Event(n) = false;
+        data.Event(n) = n == 1;
     end
 end
 
@@ -79,6 +79,7 @@ for n = 1:dur*sps % For each sample...
     end
     output(n).Time = data.Time(n); % Save timestamps to the output
     output(n).Concern = data.Concern(n); % Save concern matrix to the output
+    output(n).Event = data.Event(n);
 end
 end
 
