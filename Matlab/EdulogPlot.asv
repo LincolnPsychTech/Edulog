@@ -59,14 +59,17 @@ for L = 1:length(loggers)
     try
         co{L} = line([[data(c).Time]; [data(c).Time]]', ax{L}.YLim, 'Color', 'r', 'LineStyle', ':'); % Plot concern points
     end
-    for E = 1:length(events)
-        e = [data.(events{E})];
+    for E = 1:length(events) % For each kind of event
+        e = [data.(events{E})]; %
         try
             ev{L,E} = line([[data(e).Time]; [data(e).Time]]', ax{L}.YLim, 'Color', [1/E, 0, 0.5/E], 'LineWidth', 2); % Plot events
         end
     end
     
-    zoom
+    pan off
+    pan xon
+    zoom off
+    zoom xon
 end
 
 % Draw legend

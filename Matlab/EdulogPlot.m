@@ -60,26 +60,28 @@ for L = 1:length(loggers)
         co{L} = line([[data(c).Time]; [data(c).Time]]', ax{L}.YLim, 'Color', 'r', 'LineStyle', ':'); % Plot concern points
     end
     for E = 1:length(events)
-        e = [data.(events{E})];
-        try
-            ev{L,E} = line([[data(e).Time]; [data(e).Time]]', ax{L}.YLim, 'Color', [1/E, 0, 0.5/E], 'LineWidth', 2); % Plot events
+        e = [data.(events{E})]; % Set e to equal the logical indices of this event
+        try 
+            ev{L,E} = line([[data(e).Time]; [data(e).Time]]', ax{L}.YLim, 'Color', [1/E, 0, 0.5/E], 'LineWidth', 2); % Plot events as vertical lines at their timestamp
         end
     end
     
+    % Make sure users can only pan horizontally
     pan off
     pan xon
+    % Make sure users can only zoom horizontally
     zoom off
     zoom xon
 end
 
 % Draw legend
-    evcol = ev(1,:);
+    evcol = ev(1,:); % Get examples of event lines from the first plot
     for n = 1:length(evcol)
-        lcol(n) = evcol{n}(1);
+        lcol(n) = evcol{n}(1); % Extract only the first event line from each
     end
-    lcol = [ln{1}, lcol];
-    le = legend(lcol, [{"Data"}, events]); % Add legend
-    title(le,'Legend')
+    lcol = [ln{1}, lcol]; % Add on the data line in the first plot as an example
+    le = legend(lcol, [{"Data"}, events]); % Create legend
+    title(le,'Legend') % Set legend title
     le.Position([1,3]) = [0.9, 0.1]; % Position legend
     le.Box = 'off'; % Remove outline
 
