@@ -66,10 +66,7 @@ for L = 1:length(loggers)
         end
     end
     
-    pan off
-    pan xon
-    zoom off
-    zoom xon
+    zoom
 end
 
 % Draw legend
