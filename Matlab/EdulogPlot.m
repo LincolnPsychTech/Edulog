@@ -59,11 +59,10 @@ for L = 1:length(loggers)
     try
         co{L} = line([[data(c).Time]; [data(c).Time]]', ax{L}.YLim, 'Color', 'r', 'LineStyle', ':'); % Plot concern points
     end
+    col = lines;
     for E = 1:length(events)
         e = [data.(events{E})]; % Set e to equal the logical indices of this event
-        try 
-            ev{L,E} = line([[data(e).Time]; [data(e).Time]]', ax{L}.YLim, 'Color', [1/E, 0, 0.5/E], 'LineWidth', 2); % Plot events as vertical lines at their timestamp
-        end
+        ev{L,E} = line([[data(e).Time]; [data(e).Time]]', ax{L}.YLim, 'Color', [col(E+1,:)], 'LineWidth', 2); % Plot events as vertical lines at their timestamp
     end
     
     % Make sure users can only pan horizontally
