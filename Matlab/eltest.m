@@ -1,4 +1,4 @@
-function [test, tFig] = EdulogTest(port, dur, sps, loggers)
+function [test, tFig] = eltest(port, dur, sps, loggers)
 % Perform a test to ensure that eduloggers are working, then plot the data.
 % This program will repeat until the user confirms data is acceptible, or
 % cancels.
@@ -34,8 +34,8 @@ cont = false; % Set cont initially equal to false
 while cont == false % While cont is false...
     switch testcycle % What is the value of testcycle?
         case 'No' % If it's No...
-            test = EdulogRun(port, dur, sps, loggers); % Run the eduloggers
-            tFig = EdulogPlot(test, loggers); % Plot results
+            test = elrun(port, dur, sps, loggers); % Run the eduloggers
+            tFig = elplot(test, loggers); % Plot results
             testcycle = questdlg('Does this data look reasonable?','Test Eduloggers','Yes','No', 'Cancel','Yes'); % Ask user whether to move on
             close all % Close plot
         case 'Yes' % If it's Yes...

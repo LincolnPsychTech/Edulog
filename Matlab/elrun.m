@@ -1,4 +1,4 @@
-function [output] = EdulogRun(port, dur, sps, loggers)
+function [output] = elrun(port, dur, sps, loggers)
 % Run specified Eduloggers for a specified duration at a specified temporal
 % resolution.
 %
