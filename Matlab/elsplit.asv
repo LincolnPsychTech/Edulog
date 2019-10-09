@@ -1,0 +1,3 @@
+function [tonic, phasic] = elsplit(data)
+
+data.GSR
