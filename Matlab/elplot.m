@@ -79,7 +79,6 @@ for L = 1:length(loggers)
             'Color', ecol(E,:), ... % Set colour to black
             'LineWidth', 2 ... % Make lines 2 thick
         );
-        ecol = [ev{1,:}]; 
     end
     
     % Make sure users can only pan horizontally
