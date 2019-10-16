@@ -78,7 +78,8 @@ for L = 1:length(loggers)
             repmat(ax{L}.YLim', 1, sum(e)), ... % Y data is just axis limits
             'Color', ecol(E,:), ... % Set colour to black
             'LineWidth', 2 ... % Make lines 2 thick
-        ); 
+        );
+        ecol = [ev{1,:}]; 
     end
     
     % Make sure users can only pan horizontally
@@ -90,9 +91,9 @@ for L = 1:length(loggers)
 end
 
 % Draw legend
-    evcol = [ev{1,:}]; lcol = [ln{1} evcol(1,:)];
-    le = legend(lcol, [{"Data"} evtype]); % Create legend
-    title(le,'Legend') % Set legend title
-    le.Position([1,3]) = [0.9, 0.1]; % Position legend
-    le.Box = 'off'; % Remove outline
+%     lcol = [ln{1} ecol(1,:)];
+%     le = legend(lcol, [{"Data"} evtype]); % Create legend
+%     title(le,'Legend') % Set legend title
+%     le.Position([1,3]) = [0.9, 0.1]; % Position legend
+%     le.Box = 'off'; % Remove outline
 
