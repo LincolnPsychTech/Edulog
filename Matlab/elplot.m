@@ -90,9 +90,17 @@ for L = 1:length(loggers)
 end
 
 % Draw legend
-%     lcol = [ln{1} ecol(1,:)];
-%     le = legend(lcol, [{"Data"} evtype]); % Create legend
-%     title(le,'Legend') % Set legend title
-%     le.Position([1,3]) = [0.9, 0.1]; % Position legend
-%     le.Box = 'off'; % Remove outline
+evLg = [];
+for n = 1:length(ev)
+    evArray = ev{1,n};
+    evLg = [evLg, evArray(1)];
+end
+lnLg = ln{1};
+coLg = co{1};
+
+le = legend([lnLg coLg evLg], ["Data" "Concern" evtype] ... % Create legend
+    ); 
+le.Title.String = 'Legend'; % Set legend title
+le.Position([1,3]) = [0.9, 0.1]; % Position legend
+le.Box = 'off'; % Remove outline
 
