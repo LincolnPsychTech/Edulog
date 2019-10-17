@@ -18,6 +18,10 @@ function [r, lag] = elxcorr(data, correlates)
 
 for c = correlates % For each corrlate...
     ts.(c{:}) = [data([data.(c{:})]).Time]; % Extract timestamps of events
+    if isempty(ts.(c{:}))
+        rmfield(ts, c{:})
+        correlates(strcmp(correlates, c{:})) = [];
+    end
 end
 
 corrmat = [... % Create row of vertical pairs containing every combination of two fields

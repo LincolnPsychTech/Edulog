@@ -99,9 +99,9 @@ lnLg = ln{1};
 if ~isempty(co{1})
     coLg = co{1};
 else
-    coLg = line(ax{L}, ... % Model concern point line
-        [0 0], ... % X data is 0s
-        ax{L}.YLim', ... % Y data is just axis limits
+    coLg = line(ax{L}, ... % Plot concern points
+        [0 0], ... % X data is timestamps of latency points
+        repmat(ax{L}.YLim', ... % Y data is just axis limits
         'Color', 'r', ... % Set colour to red
         'LineStyle', ':' ... % Make lines dashed
         );
