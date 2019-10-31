@@ -26,7 +26,7 @@ function data = elrun(port, dur, sps, varargin)
 eltypes = load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
 loggers = varargin(contains(varargin, eltypes)); % Extract variable inputs matching valid types
 if isempty(loggers) % If no valid loggers supplied...
-    error('No valid Eduloggers selected'); % Throw up an error
+    error('No valid Eduloggers selected');
 end
 
 %% Essential checks

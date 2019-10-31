@@ -1,4 +1,4 @@
-function val = elgetval(port, loggers)
+function val = elgetval(port, varargin)
 % Run specified Eduloggers for a specified duration at a specified temporal
 % resolution.
 %
@@ -13,6 +13,11 @@ function val = elgetval(port, loggers)
 % Edulogger experiment, consisting of one field for each kind of Edulogger 
 % used, containing the measurements taken at each point in data.Time. 
 % Fieldnames should line up with the names specified in "loggers".
+eltypes = load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
+loggers = varargin(contains(varargin, eltypes)); % Extract variable inputs matching valid types
+if isempty(loggers) % If no valid loggers supplied...
+    error('No valid Eduloggers selected'); % Throw up an error
+end
 
 preface = ['http://localhost:' num2str(port) '/NeuLogAPI?']; % Construct the string to preface any argument passed to the Eduloggers
 
