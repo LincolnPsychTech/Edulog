@@ -18,6 +18,8 @@ function fig = elplot(data, loggers, evtype)
 % "fig" is a Graphics Object containing the graph generated, properties of
 % the graph can be changed by editing this object.
 
+
+
 sDim = get(0,'screensize'); % Get screensize
 
 % Create & setup a blank figure
