@@ -76,6 +76,7 @@ for L = 1:length(loggers)
         ); 
     
     ecol = autumn(length(evtype)); % Generate colour space for event lines
+    ev = [];
     for E = 1:length(evtype) % For each kind of event...
         e = [data.(evtype{E})]; % Get indices at which this event happened
         ev{L, E} = line(... % Plot events
@@ -95,13 +96,16 @@ for L = 1:length(loggers)
 end
 
 % Draw legend
+lnLg = ln{1};
+
 evLg = [];
-if ~isempty(ev{:})
-    for n = ev(1,:)
-        evLg = [evLg, n(1)];
+if ~isempty(ev)
+    evLg = [];
+    for n = ev{end,:}
+        evLg = [evLg, n(:)];
     end
 end
-lnLg = ln{1};
+
 if ~isempty(co{1})
     coLg = co{1};
 else
