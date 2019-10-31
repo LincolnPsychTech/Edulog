@@ -18,12 +18,12 @@ function fig = elplot(data, varargin)
 % "fig" is a Graphics Object containing the graph generated, properties of
 % the graph can be changed by editing this object.
 
-eltypes = load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
+load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
 loggers = varargin(contains(varargin, eltypes)); % Extract variable inputs matching valid types
 if isempty(loggers) % If no valid loggers supplied...
     error('No valid Eduloggers selected'); % Throw up an error
 end
-evtype = varargin(~contains(varargin, eltypes)); % Take any additional input as event indicators
+evtype = varargin(~contains(varargin, eltypes)); % Take any additional input as event types
 
 sDim = get(0,'screensize'); % Get screensize
 

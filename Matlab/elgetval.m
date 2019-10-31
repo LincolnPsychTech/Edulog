@@ -13,7 +13,7 @@ function val = elgetval(port, varargin)
 % Edulogger experiment, consisting of one field for each kind of Edulogger 
 % used, containing the measurements taken at each point in data.Time. 
 % Fieldnames should line up with the names specified in "loggers".
-eltypes = load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
+load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
 loggers = varargin(contains(varargin, eltypes)); % Extract variable inputs matching valid types
 if isempty(loggers) % If no valid loggers supplied...
     error('No valid Eduloggers selected'); % Throw up an error
