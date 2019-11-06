@@ -96,7 +96,9 @@ for L = 1:length(loggers)
 end
 
 % Draw legend
-for E = 1:length(evtype) % Create archetype lines for each event at 0 0
+lnLg = ln{1};
+
+for E = 1:length(evtype)
     evLg(E) = line(ax{L}, ... % Model concern point line
         [0 0], ... % X data is 0s
         ax{L}.YLim', ... % Y data is just axis limits
@@ -105,19 +107,16 @@ for E = 1:length(evtype) % Create archetype lines for each event at 0 0
         );
 end
 
-coLg = line(ax{L}, ... % Create archetype line for concern at 0 0
-    [0 0], ... % X data is 0s
-    ax{L}.YLim', ... % Y data is just axis limits
-    'Color', 'r', ... % Set colour to red
-    'LineStyle', ':' ... % Make lines dashed
-    );
-
-lnLg = line(ax{L}, ... % Create archetype data line at 0 0
+if ~isempty(co{1})
+    coLg = co{1};
+else
+    coLg = line(ax{L}, ... % Model concern point line
         [0 0], ... % X data is 0s
         ax{L}.YLim', ... % Y data is just axis limits
-        'Color', [42, 107, 211]./255, ... % Set colour to royal blue
-        'LineWidth', 2 ... % Make lines 2 thick
+        'Color', 'r', ... % Set colour to red
+        'LineStyle', ':' ... % Make lines dashed
         );
+end
 
 le = legend([lnLg coLg evLg], ["Data" "Concern" evtype]); % Create legend
      
