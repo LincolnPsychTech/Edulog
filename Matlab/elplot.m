@@ -96,6 +96,7 @@ for L = 1:length(loggers)
 end
 
 % Draw legend
+evLg = [];
 for E = 1:length(evtype) % Create archetype lines for each event at 0 0
     evLg(E) = line(ax{L}, ... % Model concern point line
         [0 0], ... % X data is 0s
