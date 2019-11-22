@@ -13,12 +13,14 @@ def elgetval(port, *varargin):
     # Fieldnames should line up with the names specified in "loggers".
     
     import requests
+    
+    if isinstance(varargin[0], (tuple, list)):
+        varargin = varargin[0] # Remove extraneous layers
     if not varargin:
-        raise Exception("No valid eduloggers selected")
-    loggers = list(map(''.join, varargin)); # Convert varargin to list for ease
+        raise Exception("No valid eduloggers selected") # Throw an error if no loggers were supplied
     preface = 'http://localhost:' + str(port) + '/NeuLogAPI?'; # Construct the string to preface any argument passed to the Eduloggers
     val = {};
-    for l in loggers: # For each logger...
+    for l in varargin: # For each logger...
         resp = requests.get(preface + 'GetSensorValue:[' + l + '],[1]'); # Send request for sensor value
         val[l] = float(''.join([x for x in resp.text if x in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']])); # Extract numeric values
     return val
@@ -46,7 +48,7 @@ def elrun(port, dur, *varargin):
     
     import numpy
     import time
-    
+
     # Get loggers
     eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
     loggers = [x for x in varargin if any(x == eltypes)]; # Extract variable inputs matching valid types
@@ -68,7 +70,7 @@ def elrun(port, dur, *varargin):
         data.append(val); # Assign measurement to overall data structure
     return data
 
-def elevents(data, varargin):
+def elevents(data, *varargin):
     # Apply event data to GSR data, add either a logical array or timestamps as
     # properly formatted events
     #
@@ -84,4 +86,21 @@ def elevents(data, varargin):
     # varargin should be string/object pairs, with the name of the event
     # followed by its data, e.g. elevents(data, 'Surprise', [10, 20, 30], 'relax', [5,
     # 15, 25])
-    data = [];
+    import numpy
+    import math
+    
+    args = numpy.reshape(varargin, (2,math.floor(len(varargin)/2)) ); # Reshape input arguments into pairs
+    for a in args: # For each argument pair
+        for d in range(len(data)): # For each data point....
+            if isinstance(a[1][d], bool): # If it is logical
+                if len(a[1]) == len(data): # ...and the same length as the data
+                    data[d][a[0]] = a[1][d];
+                else:
+                    raise Exception("Events must be either logical array of same length as data or numeric array of timestamps");
+            elif isinstance(a[1][d], int):
+                data[d][a[0]] = round(data[d]['Time']) in a[1];
+            else:
+                raise Exception("Events must be either logical array of same length as data or numeric array of timestamps");
+            
+    return data
+            
