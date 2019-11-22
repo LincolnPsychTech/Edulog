@@ -58,7 +58,8 @@ for L = 1:length(loggers)
         'XGrid', 'on', ... % Add vertical gridlines
         'YGrid', 'on', ... % Add horizontal gridlines
         'GridColor', 'white', ... % Make gridlines white
-        'GridAlpha', 1 ... % Make gridlines opaque
+        'GridAlpha', 1, ... % Make gridlines opaque
+        'NextPlot', 'add' ...
         );
     
     % Plot data
