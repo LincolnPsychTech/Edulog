@@ -1,13 +1,10 @@
-function data = elrun(port, dur, sps, varargin)
-% Run specified Eduloggers for a specified duration at a specified temporal
-% resolution.
+function data = elrun(port, dur, varargin)
+% Run specified Eduloggers for a specified duration at optimal resolution.
 %
 % "port" is the port Eduloggers are connected to, this is visible on the
 % Neulog API window.
 % "dur" is the duration (s) of the clap test, it must be at least 15s for
 % any response to be visible.
-% "sps" is the number of samples the edulogger should take per second, up
-% to a maximum of 5.
 % "loggers" is a one dimensional cell array, with each string specifying
 % the name of a different Edulogger as described in the Neulog API
 % literature:
@@ -17,8 +14,7 @@ function data = elrun(port, dur, sps, varargin)
 % consisting of the following fields:
 % Time: The time (s) since the start of the experiment of each sample.
 % (double)
-% Concern: Whether or not each sample took more than twice the specified
-% sample rate to retrieve (logical)
+% Concern: Whether or not each sample took more than 0.4s  to retrieve (logical)
 % An additional field for each kind of Edulogger used, containing the
 % measurements taken at each point in data.Time. Fieldnames should line up
 % with the names specified in "loggers".
@@ -30,44 +26,25 @@ if isempty(loggers) % If no valid loggers supplied...
 end
 
 %% Essential checks
-% if ~exist('C:\neulog_api', 'dir') % If the Neulog API is not installed...
-%     error('Neulog API not found, please <a href="https://neulog.com/software/">install</a>.') % Link user to the installation page
-% end
-
 if ~isnumeric(port) % If the port given is not a number...
     error('Port number (port) must be numeric') % Deliver an error
 end
-
-switch isnumeric(sps) % Is the given SPS a number?
-    case true % If so...
-        if sps > 5 % If it is greater than 5...
-            error('SPS exceeds max temporal resolution, please choose a value lower than 5') % Deliver an error
-        elseif sps < 0 % If it is less than 0...
-            error('Cannot take fewer than 0 samples per second') % Deliver an error
-        end
-    case false % If not...
-        error('Samples per second (sps) must be numeric') % Deliver an error
-end
-
 if ~isnumeric(dur) % If the given duration is not a number...
     error('Duration (dur) must be a numeric value') % Deliver an error
 end
 
 
 %% Run edulogger
-for n = 1:dur*sps % For each sample...
-    tic % Start a timer
-    while toc < 1/sps % Until the timer reaches sps^-1
+tic % Start a timer
+data = []; % Blank array to output data into
+while toc < dur % Until the specified duration has elapsed
         val = elgetval(port, loggers); % Get value(s) from Edulogger(s)
         val.Time = toc; % Record the time taken
-        val.Concern = round(toc, 1) > 2/sps; % Did this sample take more than twice the desired time to retrieve?
-    end
-    data(n) = val; % Assign measurement to overall data structure
+        try
+            val.Concern = round(toc, 1) - data(end).Time > 0.4; % Did this timer stop at more than 0.4s after the last time?
+        catch
+            val.Concern = round(toc, 1) > 0.4; % If there is no last time, did it stop at more than 0.4s?
+        end
+    data = [data; val]; % Assign measurement to overall data structure
 end
-
-times = cumsum([data.Time]); % Convert time to a cumulative sum
-for n = 1:length(data) % For each measurement...
-    data(n).Time = times(n); % Replace Time with new Cumulative Time
-end
-
 end
