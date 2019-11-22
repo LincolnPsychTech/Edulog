@@ -13,23 +13,23 @@ def elgetval(port, *varargin):
     # Fieldnames should line up with the names specified in "loggers".
     
     import requests
+    if not varargin:
+        raise Exception("No valid eduloggers selected")
     loggers = list(map(''.join, varargin)); # Convert varargin to list for ease
     preface = 'http://localhost:' + str(port) + '/NeuLogAPI?'; # Construct the string to preface any argument passed to the Eduloggers
+    val = {};
     for l in loggers: # For each logger...
         resp = requests.get(preface + 'GetSensorValue:[' + l + '],[1]'); # Send request for sensor value
-        val = float(''.join([x for x in resp.text if x in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']])); # Extract numeric values
+        val[l] = float(''.join([x for x in resp.text if x in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']])); # Extract numeric values
     return val
 
-def elrun(port, dur, sps, *varargin):
-    # Run specified Eduloggers for a specified duration at a specified temporal
-    # resolution.
+def elrun(port, dur, *varargin):
+    # Run specified Eduloggers for a specified duration at optimal resolution.
     #
     # "port" is the port Eduloggers are connected to, this is visible on the
     # Neulog API window.
     # "dur" is the duration (s) of the clap test, it must be at least 15s for
     # any response to be visible.
-    # "sps" is the number of samples the edulogger should take per second, up
-    # to a maximum of 5.
     # "loggers" is a one dimensional cell array, with each string specifying
     # the name of a different Edulogger as described in the Neulog API
     # literature:
@@ -39,12 +39,31 @@ def elrun(port, dur, sps, *varargin):
     # consisting of the following fields:
     # Time: The time (s) since the start of the experiment of each sample.
     # (double)
-    # Concern: Whether or not each sample took more than twice the specified
-    # sample rate to retrieve (logical)
+    # Concern: Whether or not each sample took more than 0.4s  to retrieve (logical)
     # An additional field for each kind of Edulogger used, containing the
     # measurements taken at each point in data.Time. Fieldnames should line up
     # with the names specified in "loggers".
     
-    eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
-    loggers = [x for x in varargin if any(x == eltypes)] ; # Extract variable inputs matching valid types
+    import numpy
+    import time
     
+    # Get loggers
+    eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
+    loggers = [x for x in varargin if any(x == eltypes)]; # Extract variable inputs matching valid types
+    
+    # Essential checks
+    if not loggers: # If no valid loggers provided
+        raise Exception("No valid eduloggers selected")
+    
+    #Run Edulogger
+    data = list(); # Create output structure
+    start = time.time(); # Start a timer
+    while time.time() < start + dur: # Until the timer reaches sps^-1
+        val = elgetval(port, loggers); # Get value(s) from Edulogger(s)
+        val['Time'] = time.time() - start; # Record the time taken
+        try:
+            val['Concern'] = data[-1]['Time'] - val['Time'] > 0.4; # Did this timer stop at more than 0.4s after the last time?
+        except:
+            val['Concern'] = val['Time'] > 0.4; # If there is no last time, did it stop at more than 0.4s?
+        data.append(val); # Assign measurement to overall data structure
+    return data
