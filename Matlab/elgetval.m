@@ -23,33 +23,20 @@ end
 preface = ['http://localhost:' num2str(port) '/NeuLogAPI?']; % Construct the string to preface any argument passed to the Eduloggers
 
 for l = 1:length(varargin) % For each logger...
-    resp = webread([preface, 'GetSensorValue:[', varargin{l}, '],[1]']); % Send command to the edulogger: The preface, a request for values and the logger type
-    val.(varargin{l}) = str2num(resp(findnum(resp))); % Parse edulogger response to isolate value
+    resp = webread([preface, 'GetSensorValue:[', char(varargin{l}), '],[1]']); % Send command to the edulogger: The preface, a request for values and the logger type
+    val.(varargin{l}) = str2num(resp(... % Find indices at which resp is equal to...
+            resp == '0' | ... % ...0
+            resp == '1' | ... % ...1
+            resp == '2' | ... % ...2
+            resp == '3' | ... % ...3
+            resp == '4' | ... % ...4
+            resp == '5' | ... % ...5
+            resp == '6' | ... % ...6
+            resp == '7' | ... % ...7
+            resp == '8' | ... % ...8
+            resp == '9' | ... % ...9
+            resp == '.' | ... % ...a decimal point
+            resp == '-'   ... % ...a minus sign
+            )); 
 end
-
-
-    function i = findnum(str)
-        % Find values in a string which can be converted to numeric without
-        % returning an error.
-        %
-        % "str" is the string in which to find numbers
-        %
-        % "i" is a logical matrix with the indices of numbers in the string as
-        % true.
-        
-        i = find(... % Find indices at which str is equal to...
-            str == '0' | ... % ...0
-            str == '1' | ... % ...1
-            str == '2' | ... % ...2
-            str == '3' | ... % ...3
-            str == '4' | ... % ...4
-            str == '5' | ... % ...5
-            str == '6' | ... % ...6
-            str == '7' | ... % ...7
-            str == '8' | ... % ...8
-            str == '9' | ... % ...9
-            str == '.' | ... % ...a decimal point
-            str == '-'   ... % ...a minus sign
-            );
-    end
 end
