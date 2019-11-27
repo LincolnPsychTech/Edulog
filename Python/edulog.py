@@ -1,4 +1,4 @@
-def elgetval(port, *varargin):
+def getval(port, *varargin):
     # Get individual value from specified Eduloggers
     # "port" is the port Eduloggers are connected to, this is visible on the
     # Neulog API window.
@@ -25,7 +25,7 @@ def elgetval(port, *varargin):
         val[l] = float(''.join([x for x in resp.text if x in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']])); # Extract numeric values
     return val
 
-def elrun(port, dur, *varargin):
+def run(port, dur, *varargin):
     # Run specified Eduloggers for a specified duration at optimal resolution.
     #
     # "port" is the port Eduloggers are connected to, this is visible on the
@@ -70,7 +70,7 @@ def elrun(port, dur, *varargin):
         data.append(val); # Assign measurement to overall data structure
     return data
 
-def elevents(data, *varargin):
+def events(data, *varargin):
     # Apply event data to GSR data, add either a logical array or timestamps as
     # properly formatted events
     #
