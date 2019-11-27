@@ -61,7 +61,7 @@ def run(port, dur, *varargin):
     data = list(); # Create output structure
     start = time.time(); # Start a timer
     while time.time() < start + dur: # Until the timer reaches sps^-1
-        val = elgetval(port, loggers); # Get value(s) from Edulogger(s)
+        val = getval(port, loggers); # Get value(s) from Edulogger(s)
         val['Time'] = time.time() - start; # Record the time taken
         try:
             val['Concern'] = val['Time'] - data[-1]['Time'] > 0.4; # Did this timer stop at more than 0.4s after the last time?
