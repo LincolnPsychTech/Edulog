@@ -1,3 +1,9 @@
+import requests
+import numpy
+import pandas
+import time
+import math
+
 def getval(port, *varargin):
     # Get individual value from specified Eduloggers
     # "port" is the port Eduloggers are connected to, this is visible on the
@@ -12,8 +18,6 @@ def getval(port, *varargin):
     # used, containing the measurements taken at each point in data.Time. 
     # Fieldnames should line up with the names specified in "loggers".
     
-    import requests
-    
     if isinstance(varargin[0], (tuple, list)):
         varargin = varargin[0] # Remove extraneous layers
     if not varargin:
@@ -21,7 +25,7 @@ def getval(port, *varargin):
     preface = 'http://localhost:' + str(port) + '/NeuLogAPI?'; # Construct the string to preface any argument passed to the Eduloggers
     val = {};
     for l in varargin: # For each logger...
-        resp = requests.get(preface + 'GetSensorValue:[' + l + '],[1]'); # Send request for sensor value
+        resp = requests.get(preface + 'GetSensorValue:[' + l + '],[1]', timeout = 400); # Send request for sensor value
         val[l] = float(''.join([x for x in resp.text if x in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']])); # Extract numeric values
     return val
 
@@ -48,10 +52,6 @@ def run(port, dur, *varargin):
     # measurements taken at each point in data.Time. Fieldnames should line up
     # with the names specified in "loggers".
     
-    import numpy
-    import pandas
-    import time
-
     # Get loggers
     eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
     loggers = [x for x in varargin if any(x == eltypes)]; # Extract variable inputs matching valid types
@@ -91,8 +91,6 @@ def events(data, *varargin):
     # varargin should be string/object pairs, with the name of the event
     # followed by its data, e.g. elevents(data, 'Surprise', [10, 20, 30], 'relax', [5,
     # 15, 25])
-    import numpy
-    import math
     
     args = numpy.reshape(varargin, (math.floor(len(varargin)/2), 2) ); # Reshape input arguments into pairs
     ev = {};
@@ -123,8 +121,6 @@ def gsrsplit(data):
     # The output "data" is the same structure which was inputted, with two
     # columns added: Tonic and Phasic, representing the tonic (gradual) and
     # phasic (fast) responses within the supplied GSR data.
-    
-    import numpy
     
     diffs = [0];
     for n in range(1, len(data)):
