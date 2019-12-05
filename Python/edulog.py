@@ -123,23 +123,23 @@ def gsrsplit(data):
     # columns added: Tonic and Phasic, representing the tonic (gradual) and
     # phasic (fast) responses within the supplied GSR data.
     
-    diffs = [0];
-    for n in range(1, len(data)):
-        diffs.append(data.Time[n] - data.Time[n-1]);
-    sps = int(round(1/statistics.mean(diffs)))
+    diffs = [0]; # Create blank list to store differences
+    for n in range(1, len(data)): # For each data point
+        diffs.append(data.Time[n] - data.Time[n-1]); # Calculate the difference from the previous value
+    sps = int(round(1/statistics.mean(diffs))) # Estimate the number of samples per second
     
-    ton = [];
-    pha = [];
-    for n in range(len(data)):
-        if n <= 2*sps:
-            ton.append( statistics.mean(data.GSR[0:n+2*sps]) );
-        elif n >= len(data)-2*sps:
-            ton.append( statistics.mean(data.GSR[n-2*sps:len(data)]) );
-        else:
-            ton.append( statistics.mean(data.GSR[n-2*sps:n+2*sps]) );
-        pha.append(data.GSR[n] - ton[n])
-    data.loc[:, 'Tonic'] = ton;
-    data.loc[:, 'Phasic'] = pha;
+    ton = []; # Create blank list to store tonic
+    pha = []; # Create blank list to store phasic
+    for n in range(len(data)): # For each data point
+        if n <= 2*sps: # for the first 2 seconds...
+            ton.append( statistics.median(data.GSR[0:n+2*sps]) ); # Take the median of all points up the this one
+        elif n >= len(data)-2*sps: # for the last 2 seconds...
+            ton.append( statistics.median(data.GSR[n-2*sps:len(data)]) ); # Take the median of all points from this one
+        else: # for the rest...
+            ton.append( statistics.mean(data.GSR[n-2*sps:n+2*sps]) ); # Take the median of all points 2s either side of the data
+        pha.append(data.GSR[n] - ton[n]) # Subtract the tonic value from the original value to get the phasic signal
+    data.loc[:, 'Tonic'] = ton; # Append tonic
+    data.loc[:, 'Phasic'] = pha; # Append phasic
     
     return data
 
