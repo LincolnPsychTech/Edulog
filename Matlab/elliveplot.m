@@ -1,4 +1,4 @@
-function elliveplot(22002, varargin)
+function [data] = elliveplot(port, varargin)
 
 load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
 loggers = varargin(contains(varargin, eltypes)); % Extract variable inputs matching valid types
@@ -10,9 +10,6 @@ end
 %% Essential checks
 if ~isnumeric(port) % If the port given is not a number...
     error('Port number (port) must be numeric') % Deliver an error
-end
-if ~isnumeric(dur) % If the given duration is not a number...
-    error('Duration (dur) must be a numeric value') % Deliver an error
 end
 
 %% Create & setup a blank figure
@@ -40,7 +37,7 @@ for L = 1:length(loggers)
         'FontName', 'Verdana', ... % Change font
         'Color', [0.98, 0.98, 1], ... % Axis background
         'XGrid', 'on', ... % Add vertical gridlines
-        'XLim', [0, 5], ... % Set axis limits
+        'XLim', [0, 30], ... % Set axis limits
         'YGrid', 'on', ... % Add horizontal gridlines
         'GridColor', 'white', ... % Make gridlines white
         'GridAlpha', 1, ... % Make gridlines opaque
@@ -68,14 +65,16 @@ while ishandle(fig)
     end
     data = [data; val]; % Assign measurement to overall data structure
     %% Plot results
-    for L = 1:length(loggers)
+    for L = 1:length(loggers) % For each logger...
         set(ln{L}, ...
-            'YData', [ln{L}.YData, val.(loggers{L})], ...
-            'XData', [ln{L}.XData, val.Time] ...
+            'YData', [ln{L}.YData, val.(loggers{L})], ... % Update y data
+            'XData', [ln{L}.XData, val.Time] ... % Update x data
             );
-        if length(data) > 2 && max([data.Time]) > 2.5
-            ax{L}.XLim = ax{L}.XLim + diff([data(end-1:end).Time]);
+        if length(data) > 2 && max([data.Time]) > 25 % After the first 25s...
+            ax{L}.XLim = ax{L}.XLim + diff([data(end-1:end).Time]); % Start scrolling the x axis
         end
     end
+    
+    drawnow
     end
 end
