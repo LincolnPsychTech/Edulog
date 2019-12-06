@@ -4,6 +4,7 @@ import pandas
 import time
 import math
 import statistics
+import matplotlib.pyplot as mpl
 
 def getval(port, *varargin):
     # Get individual value from specified Eduloggers
@@ -172,10 +173,12 @@ def scr(data, method):
     q2 = numpy.percentile(data.Phasic, 50) # Get median
     q3 = numpy.percentile(data.Phasic, 75) # Get lower quartile
     sd = statistics.stdev(data.Phasic) # Get standard deviation
-    if (method == "median") | (method == "med"): # If method is "median"...
-        data.insert( 1, "SCR", (data.Phasic < q2 - 2*sd) | (data.Phasic > q2 + 2*sd) ) # Find points where phasic response was +-2sd of q2
-    if (method == "quartiles") | (method == "q"): # If method is "quartiles"...
-        data.insert( 1, "SCR", (data.Phasic < q1 - 2*sd) | (data.Phasic > q3 + 2*sd) ) # Find points where phasic response was 2sd above / below inter-quartile range
+    if (method == "median") | (method == "med") | (method == 'median') | (method == 'med'): # If method is "median"...
+        data.insert( len(data.columns), "SCR", (data.Phasic < q2 - 2*sd) | (data.Phasic > q2 + 2*sd) ) # Find points where phasic response was +-2sd of q2
+    elif (method == "quartiles") | (method == "q") | (method == 'quartiles') | (method == 'q'): # If method is "quartiles"...
+        data.insert( len(data.columns), "SCR", (data.Phasic < q1 - 2*sd) | (data.Phasic > q3 + 2*sd) ) # Find points where phasic response was 2sd above / below inter-quartile range
+    else:
+        data.insert( len(data.columns), "SCR", False)
     
     for peak in data.loc[data.SCR].iterrows(): # For each peak...
         seg = data.loc[ (data.Time > peak[1].Time - 3) & (data.Time < peak[1].Time - 1) ] # Get segment of data at times when a related event could have happened (-1s to -3s of peak)
@@ -183,5 +186,16 @@ def scr(data, method):
             if (data[f].dtype == 'bool') & (f != "SCR"): # If the column is logical and is not the SCR column (so is an event column)
                 if sum(seg[f]) > 0: # If an event happened in the segment
                     data.EventRelated[data.Time == peak[1].Time] = data.EventRelated[data.Time == peak[1].Time] + f; # Append the name of the event to the appropriate cell
+    return data
+
+def plot(data, *varargin):
+
+    eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
+    loggers = [x for x in varargin if any(x == eltypes)]; # Extract variable inputs matching valid types
+    events = [x for x in varargin if any(x != eltypes)]; # Extract variable inputs matching valid types
     
-    
+    fig = mpl.figure()
+    for l in range(len(loggers)):
+        ax = mpl.subplot(1, len(loggers), l+1)
+        ax.set_facecolor([0.98, 0.98, 1])
+        ln = mpl.plot(data.Time, data[loggers[l]])
