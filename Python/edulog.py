@@ -188,6 +188,7 @@ def scr(data, method):
                     data.EventRelated[data.Time == peak[1].Time] = data.EventRelated[data.Time == peak[1].Time] + f; # Append the name of the event to the appropriate cell
     return data
 
+
 def plot(data, *varargin):
 
     eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
@@ -196,6 +197,47 @@ def plot(data, *varargin):
     
     fig = mpl.figure()
     for l in range(len(loggers)):
-        ax = mpl.subplot(1, len(loggers), l+1)
+        ax = mpl.subplot(len(loggers), 1, l+1)
         ax.set_facecolor([0.98, 0.98, 1])
         ln = mpl.plot(data.Time, data[loggers[l]])
+    return fig
+        
+def liveplot(port, dur, *varargin):
+    eltypes = numpy.load('eltypes.npy'); # Load possible Edulogger types from file
+    loggers = [x for x in varargin if any(x == eltypes)]; # Extract variable inputs matching valid types
+    
+    data = list();
+    val = getval(port, loggers); # Get value(s) from Edulogger(s)
+    val['Time'] = 0; # Record the time taken
+    val['Concern'] = False;
+    data.append(val); # Assign measurement to overall data structure
+    data = pandas.DataFrame(data)
+    
+    fig = mpl.figure()
+    ax = list()
+    ln = list()
+    for l in range(len(loggers)):
+        ax.append( mpl.subplot(len(loggers), 1, l+1) )
+        ax[l].set_facecolor([0.98, 0.98, 1])
+        ax[l].set_xlim((-25,5))
+        ln.append( mpl.plot(data.Time, data[loggers[l]]) )
+        
+    start = time.time() # Start a timer
+    lasttime = 0
+    while time.time() - start < dur:
+        val = getval(port, loggers) # Get value(s) from Edulogger(s)
+        val['Time'] = time.time() - start # Record the time taken
+        try:
+            val['Concern'] = val['Time'] - data[-1]['Time'] > 0.4 # Did this timer stop at more than 0.4s after the last time?
+        except:
+            val['Concern'] = val['Time'] > 0.4 # If there is no last time, did it stop at more than 0.4s?
+        row = list()
+        row.append(val)
+        data = data.append(row) # Assign measurement to overall data structure
+        for l in range(len(loggers)):
+            ln[l][0].set_xdata(data.Time)
+            ln[l][0].set_ydata(data[loggers[l]])
+            ax[l].set_xlim((n + max(data.Time) - lasttime for n in ax[l].get_xlim()))
+        lasttime = time.time() - start
+        print(time.time() - start)
+    return ax[l].get_xlim()
