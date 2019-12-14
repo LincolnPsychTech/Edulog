@@ -133,11 +133,11 @@ def gsrsplit(data):
     pha = []; # Create blank list to store phasic
     for n in range(len(data)): # For each data point
         if n <= 2*sps: # for the first 2 seconds...
-            ton.append( statistics.median(data.GSR[0:n+2*sps]) ); # Take the median of all points up the this one
+            ton.append( statistics.median(data.GSR[0:n+8*sps]) ); # Take the median of all points up the this one
         elif n >= len(data)-2*sps: # for the last 2 seconds...
-            ton.append( statistics.median(data.GSR[n-2*sps:len(data)]) ); # Take the median of all points from this one
+            ton.append( statistics.median(data.GSR[n-8*sps:len(data)]) ); # Take the median of all points from this one
         else: # for the rest...
-            ton.append( statistics.mean(data.GSR[n-2*sps:n+2*sps]) ); # Take the median of all points 2s either side of the data
+            ton.append( statistics.mean(data.GSR[n-8*sps:n+8*sps]) ); # Take the median of all points 2s either side of the data
         pha.append(data.GSR[n] - ton[n]) # Subtract the tonic value from the original value to get the phasic signal
     data.loc[:, 'Tonic'] = ton; # Append tonic
     data.loc[:, 'Phasic'] = pha; # Append phasic
