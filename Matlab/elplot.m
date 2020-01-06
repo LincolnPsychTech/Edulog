@@ -18,6 +18,11 @@ function fig = elplot(data, varargin)
 % "fig" is a Graphics Object containing the graph generated, properties of
 % the graph can be changed by editing this object.
 
+if isempty(varargin)
+    varargin = fieldnames(data)';
+    varargin(strcmp(varargin, "Time") | strcmp(varargin, "Concern")) = [];
+end
+
 load('eltypes.mat', 'eltypes'); % Load possible Edulogger types from file
 loggers = varargin(contains(varargin, eltypes)); % Extract variable inputs matching valid types
 if isempty(loggers) % If no valid loggers supplied...
@@ -76,7 +81,7 @@ for L = 1:length(loggers)
         'LineStyle', ':' ... % Make lines dashed
         ); 
     
-    ecol = autumn(length(evtype)); % Generate colour space for event lines
+    ecol = lines(length(evtype)); % Generate colour space for event lines
     ev = [];
     for E = 1:length(evtype) % For each kind of event...
         e = [data.(evtype{E})]; % Get indices at which this event happened
