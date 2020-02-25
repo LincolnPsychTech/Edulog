@@ -41,7 +41,7 @@ fig = figure(... % Create figure
     );
 
 % Extract data
-c = [data.Concern]; % Find latency points
+c = logical([data.Concern]); % Find latency points
 x = [data.Time]; % Extract x data
 
 for L = 1:length(loggers)
