@@ -20,7 +20,7 @@ if ~isfield(data, 'EKG') % If data does not have a column called "EKG"...
     error("Data does not contain EKG data") % Deliver an error
 end
 
-sps = round( 1/mean( diff([data(~isnan([data.Time])).Time]) ) ); % From data, estimate sps which was used
+sps = elsps(data); % From data, estimate sps which was used
 tonic = smooth([data.EKG], sps, 'moving'); % Use a moving smooth method with a span of 1 second to extract tonic signal
 phasic = [data.EKG]' - tonic; % Subtract tonic signal from raw data to get phasic signal
 beats = islocalmax(abs(phasic), 'FlatSelection', 'center', 'MinSeparation', round(sps/2)); % Identify apex point of each beat (local peaks within 0.5s range)
