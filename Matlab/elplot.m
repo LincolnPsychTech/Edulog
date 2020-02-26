@@ -81,7 +81,8 @@ for L = 1:length(loggers)
         'LineStyle', ':' ... % Make lines dashed
         ); 
     
-    ecol = lines(length(evtype)); % Generate colour space for event lines
+    ecol = lines(length(evtype)+1); % Generate colour space for event lines
+    ecol(1,:) = []; % Remove first colour (as it's already used by the data line)
     ev = [];
     for E = 1:length(evtype) % For each kind of event...
         e = [data.(evtype{E})]; % Get indices at which this event happened
