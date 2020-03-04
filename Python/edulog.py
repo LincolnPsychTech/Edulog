@@ -219,26 +219,25 @@ def beat(data):
 
     beatApex = [];
     for n in range(len(data)): # For each data point
-        if n <= SPS:
+        if n <= SPS: # For the first second
             beatApex.append( max(pha[0:n+SPS]) == pha[n] ); # Is this the largest point in range?
-        elif n >= len(data)-SPS:  
+        elif n >= len(data)-SPS:  #For the last second
             beatApex.append( max(pha[n-SPS:len(data)]) == pha[n] ); # Is this the largest point in range?
-        else:
+        else: # For the rest
             beatApex.append( max(pha[n-SPS:n+SPS]) == pha[n] ); # Is this the largest point in range?
     data.BeatApex = beatApex # Create column to store beat apices
-    baTimes = data.Time[beatApex]
+    baTimes = data.Time[beatApex] # Store timestamps of each beat
     
     diffs = [0]; # Create blank list to store differences
     for n in range(1, len(baTimes)): # For each data point
-        iu = baTimes.index[n];
-        il = baTimes.index[n-1];
+        iu = baTimes.index[n]; # Current index
+        il = baTimes.index[n-1]; # Previous index
         diffs.append(baTimes[iu] - baTimes[il]); # Calculate the difference from the previous value
     
-    for n in range(len(data)):
-        dist = baTimes.index.values - data.Time[n]
-        i = abs(dist) == min(abs(dist))
-        beatDist = diffs[[n for n, e in enumerate(i) if e != 0][0]]
-        data.BPM[n] = 60 / beatDist if beatDist else 0  
+    for n in range(len(data)): # For each data point
+        dist = abs(baTimes.index.values - n) # Calculate distance to each beat
+        beatDist = diffs[[n for n, e in enumerate(dist == min(dist)) if e][0]] # Take time difference corresponding to this beat
+        data.BPM[n] = 60 / beatDist if beatDist else 0 # Convert from "seconds between beat" to "beats per minute"
     
     return beat
 
