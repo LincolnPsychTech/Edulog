@@ -37,7 +37,8 @@ fig = figure(... % Create figure
     'Name', 'Edulog Data', ... % Name figure
     'NumberTitle', 'off', ... % Remove "Figure 1" label
     'Color', 'white', ... % White background
-    'Position', [200, 100, sDim(3) - 400, sDim(4) - 200] ... % Resize to the height of the screen - 200
+    'Position', [200, 100, sDim(3) - 400, sDim(4) - 200], ... % Resize to the height of the screen - 200
+    'InvertHardcopy', 'off' ... % Make sure backgrounds save correctly
     );
 
 % Extract data
