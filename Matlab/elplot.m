@@ -133,4 +133,5 @@ le = legend([lnLg coLg evLg], ["Data" "Concern" evtype]); % Create legend
 le.Title.String = 'Legend'; % Set legend title
 le.Position([1,3]) = [0.9, 0.1]; % Position legend
 le.Box = 'off'; % Remove outline
+linkaxes([ax{:}], 'x'); % Link all x axes for uniform navigation
 
