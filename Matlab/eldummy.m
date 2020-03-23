@@ -92,8 +92,7 @@ for l = cellfun(@string, loggers)
                     beati = sort([beati newbeats]); % Replace with new beats
                 end
             end
-            bpm = [0 (60*sps)./diff(sort(beati))];
-            
+            bpm = [0 (60*sps)./diff(sort(beati))]; % Calculate running bpm from beats
             for n = 1:length(raw) % For each datapoint...
                 [~, i] = min(abs( n - beati )); % Find index of closest beat
                 raw(n) = bpm(i) + rand()*std(bpm) - std(bpm)/2; % Assign the corresponding bpm value to that index, with random variation
